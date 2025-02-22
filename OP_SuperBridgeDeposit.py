@@ -54,9 +54,10 @@ def activity(bot: Bot, amount_input):
             f'Баланс в сети {Chains.SONEIUM.name.upper()}: {balance_before:.5f} ETH. Пополнение не требуется!')
         return
 
-    deposit_amount = amount_input - balance_before
+
     op_onchain = Onchain(bot.account, Chains.OP)
     op_balance = op_onchain.get_balance()
+    deposit_amount = amount_input - op_onchain
     if deposit_amount < op_balance * 1.05:
         logger.error(
             f'Баланс в сети {Chains.OP.name.upper()} недостаточный для перевода: {balance_before:.5f} ETH!')
