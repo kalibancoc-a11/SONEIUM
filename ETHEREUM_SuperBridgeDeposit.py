@@ -55,6 +55,14 @@ def activity(bot: Bot, amount_input):
         return
 
 
+    ethereum_onchain = Onchain(bot.account, Chains.ETHEREUM)
+    ethereum_balance = ethereum_onchain.get_balance(address=bot.account.address)
+    deposit_amount = amount_input - balance_before
+    if deposit_amount > ethereum_balance * 1.1:
+        logger.error(
+            f'Баланс в сети {Chains.ETHEREUM.name.upper()} недостаточный для перевода: {balance_before:.5f} ETH!')
+        return
+
     bot.metamask.auth_metamask()
     bot.metamask.select_chain(Chains.ETHEREUM)
     bot.ads.open_url('https://superbridge.app/soneium')
@@ -78,6 +86,9 @@ def activity(bot: Bot, amount_input):
     bot.ads.page.get_by_role('textbox').click()
     random_sleep(2, 3)
     bot.ads.page.keyboard.type(f'{deposit_amount:.5f}', delay=300)
+    if bot.ads.page.locator('button', has_text='Insufficient ETH for gas').count():
+        logger.error('Недостаточно средств для отправки транзакции!')
+        return
     time.sleep(10)
     bot.ads.page.get_by_role('button', name='Review bridge').click()
     random_sleep(2, 3)
