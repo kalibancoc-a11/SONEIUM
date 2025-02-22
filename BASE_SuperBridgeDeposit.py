@@ -58,7 +58,7 @@ def activity(bot: Bot, amount_input):
     base_onchain = Onchain(bot.account, Chains.BASE)
     base_balance = base_onchain.get_balance()
     deposit_amount = amount_input - balance_before
-    if deposit_amount < base_balance * 1.05:
+    if deposit_amount > base_balance * 1.05:
         logger.error(
             f'Баланс в сети {Chains.BASE.name.upper()} недостаточный для перевода: {balance_before:.5f} ETH!')
         return

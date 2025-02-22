@@ -56,9 +56,9 @@ def activity(bot: Bot, amount_input):
 
 
     ethereum_onchain = Onchain(bot.account, Chains.ETHEREUM)
-    ethereum_balance = ethereum_onchain.get_balance()
+    ethereum_balance = ethereum_onchain.get_balance(address=bot.account.address)
     deposit_amount = amount_input - balance_before
-    if deposit_amount < ethereum_balance * 1.1:
+    if deposit_amount > ethereum_balance * 1.1:
         logger.error(
             f'Баланс в сети {Chains.ETHEREUM.name.upper()} недостаточный для перевода: {balance_before:.5f} ETH!')
         return
