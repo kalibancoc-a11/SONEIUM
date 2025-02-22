@@ -55,14 +55,6 @@ def activity(bot: Bot, amount_input):
         return
 
 
-    op_onchain = Onchain(bot.account, Chains.OP)
-    op_balance = op_onchain.get_balance()
-    deposit_amount = amount_input - balance_before
-    if deposit_amount > op_balance * 1.05:
-        logger.error(
-            f'Баланс в сети {Chains.OP.name.upper()} недостаточный для перевода: {balance_before:.5f} ETH!')
-        return
-
     bot.metamask.auth_metamask()
     bot.metamask.select_chain(Chains.OP)
     bot.ads.open_url('https://superbridge.app/soneium')
